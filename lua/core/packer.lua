@@ -20,11 +20,12 @@ return require('packer').startup(function(use)
 	  requires = { {'nvim-lua/plenary.nvim'} }
   }
 
+  -- Color Scheme
   use({
-	  "neanias/everforest-nvim",
+	  "folke/tokyonight.nvim",
 	  -- Optional; default configuration will be used if setup isn't called.
 	  config = function()
-		  require("everforest").setup()
+		  require("tokyonight").setup()
 	  end,
   })
 
