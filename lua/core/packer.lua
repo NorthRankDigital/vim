@@ -34,28 +34,21 @@ return require('packer').startup(function(use)
   use('mbbill/undotree')
   use('tpope/vim-fugitive')
 
+  -- LSP 
   use({'neovim/nvim-lspconfig'})
-  use({'hrsh7th/nvim-cmp'})
-  use({'hrsh7th/cmp-nvim-lsp'})
   use({'williamboman/mason.nvim'})
   use({'williamboman/mason-lspconfig.nvim'})
+
+  -- Auto completion
+  use({'hrsh7th/nvim-cmp'})
+  use({'hrsh7th/cmp-nvim-lsp'})
   use({'L3MON4D3/LuaSnip'})
   use({'saadparwaiz1/cmp_luasnip'})
   use({'rafamadriz/friendly-snippets'})
 
-  -- Terminal
-  use {"akinsho/toggleterm.nvim", tag = '*', config = function()
-    require("toggleterm").setup()
-  end}
-
-
-
   -- Automatically set up your configuration after cloning packer.nvim
   -- Put this at the end after all plugins
   if packer_bootstrap then
-
-
-
     require('packer').sync()
   end
 end)
