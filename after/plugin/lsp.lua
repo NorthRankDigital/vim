@@ -18,6 +18,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
     vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
     vim.keymap.set('n', 'go', vim.lsp.buf.type_definition, opts)
     vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
+    vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, opts)
     vim.keymap.set('n', '<leader>vn', vim.lsp.buf.rename, opts)
     vim.keymap.set('n', '<leader>va', vim.lsp.buf.code_action, opts)
     vim.keymap.set({'n', 'x'}, '<F3>', function()
