@@ -19,6 +19,9 @@ require("nvim-tree").setup({
   renderer = {
     group_empty = false,
   },
+  git = {
+    ignore = false,
+  },
   filters = {
     dotfiles = false,
   },
