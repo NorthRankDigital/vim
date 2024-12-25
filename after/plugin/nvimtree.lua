@@ -15,6 +15,7 @@ require("nvim-tree").setup({
   },
   view = {
     width = 30,
+    relativenumber = true,
   },
   renderer = {
     group_empty = false,
@@ -25,4 +26,4 @@ require("nvim-tree").setup({
   filters = {
     dotfiles = false,
   },
-})
+ })
