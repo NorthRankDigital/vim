@@ -61,7 +61,7 @@ lspconfig.html.setup({
   on_attach = function(client, bufnr)
     -- Add keymaps and other customizations here if needed
   end,
-  filetypes = {"typescript", "typescriptreact","typescript.tsx", "html"},
+  filetypes = {"html"},
   capabilites = capabilities,
 })
 
