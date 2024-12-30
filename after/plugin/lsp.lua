@@ -67,7 +67,7 @@ lspconfig.html.setup({
 
 lspconfig.emmet_ls.setup({
   capabilities = capabilities,
-  filetypes = {"css", "html", "javascript", "javascriptreact", "sass", "typescript", "scss", "typescriptreact"},
+  filetypes = {"css", "html", "javascript", "sass", "scss"},
   init_options = {
     html = {
       options = {
