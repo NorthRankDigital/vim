@@ -1,7 +1,7 @@
 -- Ensure Mason and Mason-LSPConfig are loaded
 require('mason').setup()
 require('mason-lspconfig').setup({
-  ensure_installed = { "ts_ls", "eslint", "tailwindcss", "cssls", "html", "emmet_ls" }, -- Auto-install these servers
+  ensure_installed = { "ts_ls", "eslint", "tailwindcss", "cssls", "html", "emmet_ls", "astro"}, -- Auto-install these servers
 })
 
 -- Load lspconfig and configure TypeScript and ESLint
@@ -75,4 +75,9 @@ lspconfig.emmet_ls.setup({
       }
     }
   }
+})
+
+lspconfig.astro.setup({
+  capabilities = capabilities,
+  filetypes = {"astro"},
 })
