@@ -78,6 +78,9 @@ lspconfig.emmet_ls.setup({
 })
 
 lspconfig.astro.setup({
+  on_attach = function(client, bufnr)
+    -- Add keymaps and other customizations here if needed
+  end,
   capabilities = capabilities,
   filetypes = {"astro"},
 })
