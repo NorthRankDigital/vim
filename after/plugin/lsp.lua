@@ -1,7 +1,7 @@
 -- Ensure Mason and Mason-LSPConfig are loaded
 require('mason').setup()
 require('mason-lspconfig').setup({
-  ensure_installed = { "ts_ls", "eslint", "tailwindcss", "cssls", "html", "emmet_ls", "astro"}, -- Auto-install these servers
+  ensure_installed = { "ts_ls", "eslint", "tailwindcss", "cssls", "html", "emmet_ls", "astro" }, -- Auto-install these servers
 })
 
 -- Load lspconfig and configure TypeScript and ESLint
@@ -21,7 +21,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
     vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, opts)
     vim.keymap.set('n', '<leader>vn', vim.lsp.buf.rename, opts)
     vim.keymap.set('n', '<leader>va', vim.lsp.buf.code_action, opts)
-    vim.keymap.set({'n', 'x'}, '<F3>', function()
+    vim.keymap.set({ 'n', 'x' }, '<F3>', function()
       vim.lsp.buf.format { async = true }
     end, opts)
   end,
@@ -30,44 +30,49 @@ vim.api.nvim_create_autocmd('LspAttach', {
 -- Add cmp_nvim_lsp capabilities
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
-
+-- TypeScript/JavaScript (Using ts_ls instead of tsserver)
 lspconfig.ts_ls.setup({
   on_attach = function(client, bufnr)
     -- Add keymaps and other customizations here if needed
   end,
-  filetypes = {"typescript", "typescriptreact", "typescript.tsx"},
-  capabilites = capabilities,
+  filetypes = { "typescript", "typescriptreact", "typescript.tsx", "javascript", "javascriptreact", "javascript.jsx" },
+  capabilities = capabilities,
 })
 
+-- ESLint (Fix: Use callback instead of command)
 lspconfig.eslint.setup({
   on_attach = function(client, bufnr)
-    -- Auto-format on save, or other ESLint-specific settings
     vim.api.nvim_create_autocmd("BufWritePre", {
       buffer = bufnr,
-      command = "EslintFixAll",
+      callback = function()
+        vim.cmd("EslintFixAll")
+      end,
     })
   end,
-  capabilites = capabilities,
+  capabilities = capabilities,
 })
 
+-- CSS (Fix: Typo in capabilities)
 lspconfig.cssls.setup({
   on_attach = function(client, bufnr)
     -- Add keymaps and other customizations here if needed
   end,
-  capabilites = capabilities,
+  capabilities = capabilities,
 })
 
+-- HTML (Fix: Typo in capabilities)
 lspconfig.html.setup({
   on_attach = function(client, bufnr)
     -- Add keymaps and other customizations here if needed
   end,
-  filetypes = {"html"},
-  capabilites = capabilities,
+  filetypes = { "html" },
+  capabilities = capabilities,
 })
 
+-- Emmet
 lspconfig.emmet_ls.setup({
   capabilities = capabilities,
-  filetypes = {"css", "html", "javascript", "sass", "scss"},
+  filetypes = { "css", "html", "javascript", "sass", "scss" },
   init_options = {
     html = {
       options = {
@@ -77,10 +82,12 @@ lspconfig.emmet_ls.setup({
   }
 })
 
+-- Astro
 lspconfig.astro.setup({
   on_attach = function(client, bufnr)
     -- Add keymaps and other customizations here if needed
   end,
   capabilities = capabilities,
-  filetypes = {"astro"},
+  filetypes = { "astro" },
 })
+
