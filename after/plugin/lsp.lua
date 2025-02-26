@@ -88,6 +88,9 @@ lspconfig.astro.setup({
     -- Add keymaps and other customizations here if needed
   end,
   capabilities = capabilities,
+  init_options = {
+    typescript={},
+  },
   filetypes = { "astro" },
 })
 
