@@ -1,0 +1,9 @@
+require('colorizer').setup({
+  'css',
+  'scss',
+  'sass',
+  'html',
+  'javascript',
+  'typescript',
+  'astro',
+})

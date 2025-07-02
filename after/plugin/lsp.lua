@@ -1,10 +1,4 @@
--- Ensure Mason and Mason-LSPConfig are loaded
-require('mason').setup()
-require('mason-lspconfig').setup({
-  ensure_installed = { "ts_ls", "eslint", "tailwindcss", "cssls", "html", "emmet_ls", "astro", "marksman" }, -- Auto-install these servers
-})
-
--- Load lspconfig and configure TypeScript and ESLint
+-- Load lspconfig directly (bypassing Mason)
 local lspconfig = require('lspconfig')
 
 -- Default LSP keymaps
@@ -28,18 +22,16 @@ vim.api.nvim_create_autocmd('LspAttach', {
 })
 
 -- Add cmp_nvim_lsp capabilities
-local capabilities = require('cmp_nvim_lsp').default_capabilities()
+local cmp_ok, cmp_lsp = pcall(require, 'cmp_nvim_lsp')
+local capabilities = cmp_ok and cmp_lsp.default_capabilities() or vim.lsp.protocol.make_client_capabilities()
 
--- TypeScript/JavaScript (Using ts_ls instead of tsserver)
+-- TypeScript/JavaScript
 lspconfig.ts_ls.setup({
-  on_attach = function(client, bufnr)
-    -- Add keymaps and other customizations here if needed
-  end,
   filetypes = { "typescript", "typescriptreact", "typescript.tsx", "javascript", "javascriptreact", "javascript.jsx" },
   capabilities = capabilities,
 })
 
--- ESLint (Fix: Use callback instead of command)
+-- ESLint
 lspconfig.eslint.setup({
   on_attach = function(client, bufnr)
     vim.api.nvim_create_autocmd("BufWritePre", {
@@ -52,19 +44,14 @@ lspconfig.eslint.setup({
   capabilities = capabilities,
 })
 
--- CSS (Fix: Typo in capabilities)
+-- CSS
 lspconfig.cssls.setup({
-  on_attach = function(client, bufnr)
-    -- Add keymaps and other customizations here if needed
-  end,
   capabilities = capabilities,
+  filetypes = { "css", "scss", "sass", "less" }, -- Add scss and sass
 })
 
--- HTML (Fix: Typo in capabilities)
+-- HTML
 lspconfig.html.setup({
-  on_attach = function(client, bufnr)
-    -- Add keymaps and other customizations here if needed
-  end,
   filetypes = { "html" },
   capabilities = capabilities,
 })
@@ -72,7 +59,7 @@ lspconfig.html.setup({
 -- Emmet
 lspconfig.emmet_ls.setup({
   capabilities = capabilities,
-  filetypes = { "css", "html", "javascript", "sass", "scss" },
+  filetypes = { "css", "html", "javascript", "sass", "scss", "astro" },
   init_options = {
     html = {
       options = {
@@ -84,21 +71,21 @@ lspconfig.emmet_ls.setup({
 
 -- Astro
 lspconfig.astro.setup({
-  on_attach = function(client, bufnr)
-    -- Add keymaps and other customizations here if needed
-  end,
   capabilities = capabilities,
   init_options = {
-    typescript={},
+    typescript = {},
   },
   filetypes = { "astro" },
 })
 
--- Marksman
+-- TailwindCSS
+lspconfig.tailwindcss.setup({
+  capabilities = capabilities,
+  filetypes = { "html", "css", "scss", "javascript", "javascriptreact", "typescript", "typescriptreact", "astro" },
+})
+
+-- Marksman (Markdown)
 lspconfig.marksman.setup({
-  on_attach = function(client, bufnr)
-    -- Add custom keymaps or settings if needed
-  end,
   capabilities = capabilities,
   filetypes = { "markdown" },
 })

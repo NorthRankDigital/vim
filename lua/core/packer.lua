@@ -13,47 +13,44 @@ local packer_bootstrap = ensure_packer()
 
 return require('packer').startup(function(use)
   use 'wbthomason/packer.nvim'
-
   use {
-	  'nvim-telescope/telescope.nvim', tag = '0.1.8',
-	  -- or                            , branch = '0.1.x',
-	  requires = { {'nvim-lua/plenary.nvim'} }
+    'nvim-telescope/telescope.nvim', tag = '0.1.8',
+    requires = { {'nvim-lua/plenary.nvim'} }
   }
-
+  
   -- Color Scheme
   use({
-	  "folke/tokyonight.nvim",
-	  -- Optional; default configuration will be used if setup isn't called.
-	  config = function()
-		  require("tokyonight").setup()
-	  end,
+    "folke/tokyonight.nvim",
+    config = function()
+      require("tokyonight").setup()
+    end,
   })
-
- use({'nvim-tree/nvim-tree.lua',
-   requires = {
-     'nvim-tree/nvim-web-devicons',
-   }
- })
-
+  
+  use({'nvim-tree/nvim-tree.lua',
+    requires = {
+      'nvim-tree/nvim-web-devicons',
+    }
+  })
+  
   use('nvim-treesitter/nvim-treesitter', {run = ':TSUpdate'})
   use('ThePrimeagen/harpoon')
   use('mbbill/undotree')
   use('tpope/vim-fugitive')
-
-  -- LSP 
+  
+  -- LSP
   use({'neovim/nvim-lspconfig'})
-  use({'williamboman/mason.nvim'})
-  use({'williamboman/mason-lspconfig.nvim'})
-
+  
   -- Auto completion
   use({'hrsh7th/nvim-cmp'})
   use({'hrsh7th/cmp-nvim-lsp'})
   use({'L3MON4D3/LuaSnip'})
   use({'saadparwaiz1/cmp_luasnip'})
   use({'rafamadriz/friendly-snippets'})
-
+  
+  -- Color highlighting
+  use 'norcalli/nvim-colorizer.lua'
+  
   -- Automatically set up your configuration after cloning packer.nvim
-  -- Put this at the end after all plugins
   if packer_bootstrap then
     require('packer').sync()
   end
