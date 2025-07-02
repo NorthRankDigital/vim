@@ -1,7 +1,7 @@
 -- Ensure Mason and Mason-LSPConfig are loaded
 require('mason').setup()
 require('mason-lspconfig').setup({
-  ensure_installed = { "ts_ls", "eslint", "tailwindcss", "cssls", "html", "emmet_ls", "astro" }, -- Auto-install these servers
+  ensure_installed = { "ts_ls", "eslint", "tailwindcss", "cssls", "html", "emmet_ls", "astro", "marksman" }, -- Auto-install these servers
 })
 
 -- Load lspconfig and configure TypeScript and ESLint
@@ -88,6 +88,17 @@ lspconfig.astro.setup({
     -- Add keymaps and other customizations here if needed
   end,
   capabilities = capabilities,
+  init_options = {
+    typescript={},
+  },
   filetypes = { "astro" },
 })
 
+-- Marksman
+lspconfig.marksman.setup({
+  on_attach = function(client, bufnr)
+    -- Add custom keymaps or settings if needed
+  end,
+  capabilities = capabilities,
+  filetypes = { "markdown" },
+})
