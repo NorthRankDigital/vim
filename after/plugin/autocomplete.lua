@@ -4,18 +4,21 @@ require("luasnip.loaders.from_vscode").lazy_load()
 cmp.setup({
   mapping = cmp.mapping.preset.insert({
     ['<C-Space>'] = cmp.mapping.complete(),
-    ['<CR>'] = cmp.mapping.confirm({ select = true }),
+    ['<CR>'] = cmp.mapping.confirm({ 
+      select = true
+    }),
     ['<C-e>'] = cmp.mapping.close(), -- Add this to manually close completion
   }),
   snippet = {
     expand = function(args)
-      -- Skip snippet expansion for SCSS files
       if vim.bo.filetype == 'scss' or vim.bo.filetype == 'sass' then
-        return
+        -- For SCSS/SASS, just insert the text without snippet expansion
+        vim.api.nvim_put({args.body}, 'c', false, true)
+      else
+        require('luasnip').lsp_expand(args.body)
       end
-      require('luasnip').lsp_expand(args.body)
     end,
-  },
+  },  
   sources = cmp.config.sources({
     {name = 'nvim_lsp'},
     {name = 'luasnip'},
