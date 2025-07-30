@@ -25,13 +25,13 @@ vim.api.nvim_create_autocmd('LspAttach', {
 local cmp_ok, cmp_lsp = pcall(require, 'cmp_nvim_lsp')
 local capabilities = cmp_ok and cmp_lsp.default_capabilities() or vim.lsp.protocol.make_client_capabilities()
 
--- TypeScript/JavaScript
+-- TypeScript/JavaScript (now includes MDX)
 lspconfig.ts_ls.setup({
-  filetypes = { "typescript", "typescriptreact", "typescript.tsx", "javascript", "javascriptreact", "javascript.jsx" },
+  filetypes = { "typescript", "typescriptreact", "typescript.tsx", "javascript", "javascriptreact", "javascript.jsx", "mdx" },
   capabilities = capabilities,
 })
 
--- ESLint
+-- ESLint (now includes MDX)
 lspconfig.eslint.setup({
   on_attach = function(client, bufnr)
     vim.api.nvim_create_autocmd("BufWritePre", {
@@ -42,12 +42,13 @@ lspconfig.eslint.setup({
     })
   end,
   capabilities = capabilities,
+  filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact", "mdx" },
 })
 
 -- CSS
 lspconfig.cssls.setup({
   capabilities = capabilities,
-  filetypes = { "css", "scss", "sass", "less" }, -- Add scss and sass
+  filetypes = { "css", "scss", "sass", "less" },
 })
 
 -- HTML
@@ -56,10 +57,10 @@ lspconfig.html.setup({
   capabilities = capabilities,
 })
 
--- Emmet
+-- Emmet (now includes MDX)
 lspconfig.emmet_ls.setup({
   capabilities = capabilities,
-  filetypes = { "css", "html", "javascript", "sass", "scss", "astro" },
+  filetypes = { "css", "html", "javascript", "sass", "scss", "astro", "mdx" },
   init_options = {
     html = {
       options = {
@@ -78,14 +79,24 @@ lspconfig.astro.setup({
   filetypes = { "astro" },
 })
 
--- TailwindCSS
+-- TailwindCSS (now includes MDX)
 lspconfig.tailwindcss.setup({
   capabilities = capabilities,
-  filetypes = { "html", "css", "scss", "javascript", "javascriptreact", "typescript", "typescriptreact", "astro" },
+  filetypes = { "html", "css", "scss", "javascript", "javascriptreact", "typescript", "typescriptreact", "astro", "mdx" },
 })
 
--- Marksman (Markdown)
+-- Marksman (Markdown - now includes MDX)
 lspconfig.marksman.setup({
   capabilities = capabilities,
-  filetypes = { "markdown" },
+  filetypes = { "markdown", "mdx" },
+})
+
+-- MDX Analyzer Language Server
+lspconfig.mdx_analyzer.setup({
+  cmd = { "mdx-language-server", "--stdio" },
+  capabilities = capabilities,
+  filetypes = { "mdx" },
+  init_options = {
+    typescript = {}
+  },
 })

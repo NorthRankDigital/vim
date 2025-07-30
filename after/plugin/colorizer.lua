@@ -6,4 +6,5 @@ require('colorizer').setup({
   'javascript',
   'typescript',
   'astro',
+  'mdx',
 })
