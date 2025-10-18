@@ -1,6 +1,3 @@
--- Load lspconfig directly (bypassing Mason)
-local lspconfig = require('lspconfig')
-
 -- Default LSP keymaps
 vim.api.nvim_create_autocmd('LspAttach', {
   desc = 'LSP actions',
@@ -26,13 +23,21 @@ local cmp_ok, cmp_lsp = pcall(require, 'cmp_nvim_lsp')
 local capabilities = cmp_ok and cmp_lsp.default_capabilities() or vim.lsp.protocol.make_client_capabilities()
 
 -- TypeScript/JavaScript (now includes MDX)
-lspconfig.ts_ls.setup({
-  filetypes = { "typescript", "typescriptreact", "typescript.tsx", "javascript", "javascriptreact", "javascript.jsx", "mdx" },
+-- TypeScript/JavaScript (now includes MDX AND ASTRO)
+vim.lsp.config('ts_ls', {
+  cmd = { 'typescript-language-server', '--stdio' },
+  filetypes = { "typescript", "typescriptreact", "typescript.tsx", "javascript", "javascriptreact", "javascript.jsx", "mdx", "astro" },
+  root_markers = { 'tsconfig.json', 'jsconfig.json', 'package.json', '.git' },
   capabilities = capabilities,
 })
+vim.lsp.enable('ts_ls')
 
 -- ESLint (now includes MDX)
-lspconfig.eslint.setup({
+vim.lsp.config('eslint', {
+  cmd = { 'vscode-eslint-language-server', '--stdio' },
+  filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact", "mdx" },
+  root_markers = { '.eslintrc', '.eslintrc.js', '.eslintrc.json', 'package.json', '.git' },
+  capabilities = capabilities,
   on_attach = function(client, bufnr)
     vim.api.nvim_create_autocmd("BufWritePre", {
       buffer = bufnr,
@@ -41,26 +46,33 @@ lspconfig.eslint.setup({
       end,
     })
   end,
-  capabilities = capabilities,
-  filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact", "mdx" },
 })
+vim.lsp.enable('eslint')
 
 -- CSS
-lspconfig.cssls.setup({
-  capabilities = capabilities,
+vim.lsp.config('cssls', {
+  cmd = { 'vscode-css-language-server', '--stdio' },
   filetypes = { "css", "scss", "sass", "less" },
+  root_markers = { 'package.json', '.git' },
+  capabilities = capabilities,
 })
+vim.lsp.enable('cssls')
 
 -- HTML
-lspconfig.html.setup({
+vim.lsp.config('html', {
+  cmd = { 'vscode-html-language-server', '--stdio' },
   filetypes = { "html" },
+  root_markers = { 'package.json', '.git' },
   capabilities = capabilities,
 })
+vim.lsp.enable('html')
 
 -- Emmet (now includes MDX)
-lspconfig.emmet_ls.setup({
-  capabilities = capabilities,
+vim.lsp.config('emmet_ls', {
+  cmd = { 'emmet-ls', '--stdio' },
   filetypes = { "css", "html", "javascript", "sass", "scss", "astro", "mdx" },
+  root_markers = { 'package.json', '.git' },
+  capabilities = capabilities,
   init_options = {
     html = {
       options = {
@@ -69,34 +81,46 @@ lspconfig.emmet_ls.setup({
     }
   }
 })
+vim.lsp.enable('emmet_ls')
 
 -- Astro
-lspconfig.astro.setup({
+vim.lsp.config('astro', {
+  cmd = { 'astro-ls', '--stdio' },
+  filetypes = { "astro" },
+  root_markers = { 'astro.config.mjs', 'package.json', '.git' },
   capabilities = capabilities,
   init_options = {
     typescript = {},
   },
-  filetypes = { "astro" },
 })
+vim.lsp.enable('astro')
 
 -- TailwindCSS (now includes MDX)
-lspconfig.tailwindcss.setup({
-  capabilities = capabilities,
+vim.lsp.config('tailwindcss', {
+  cmd = { 'tailwindcss-language-server', '--stdio' },
   filetypes = { "html", "css", "scss", "javascript", "javascriptreact", "typescript", "typescriptreact", "astro", "mdx" },
+  root_markers = { 'tailwind.config.js', 'tailwind.config.ts', 'package.json', '.git' },
+  capabilities = capabilities,
 })
+vim.lsp.enable('tailwindcss')
 
 -- Marksman (Markdown - now includes MDX)
-lspconfig.marksman.setup({
-  capabilities = capabilities,
+vim.lsp.config('marksman', {
+  cmd = { 'marksman', 'server' },
   filetypes = { "markdown", "mdx" },
+  root_markers = { '.git' },
+  capabilities = capabilities,
 })
+vim.lsp.enable('marksman')
 
 -- MDX Analyzer Language Server
-lspconfig.mdx_analyzer.setup({
+vim.lsp.config('mdx_analyzer', {
   cmd = { "mdx-language-server", "--stdio" },
-  capabilities = capabilities,
   filetypes = { "mdx" },
+  root_markers = { 'package.json', '.git' },
+  capabilities = capabilities,
   init_options = {
     typescript = {}
   },
 })
+vim.lsp.enable('mdx_analyzer')
