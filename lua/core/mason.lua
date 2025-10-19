@@ -1,14 +1,14 @@
 require("mason").setup()
 require("mason-lspconfig").setup({
   ensure_installed = {
-    "astro",
     "ts_ls",
     "eslint",
+    "cssls", 
     "html",
-    "cssls",
-    "tailwindcss",
     "emmet_ls",
+    "astro",
+    "tailwindcss",
     "marksman",
   },
-  automatic_installation = true,
+  automatic_enable = false,  -- DISABLE auto-enable
 })

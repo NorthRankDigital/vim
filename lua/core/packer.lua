@@ -37,8 +37,6 @@ return require('packer').startup(function(use)
   
   -- LSP
   use({'neovim/nvim-lspconfig'})
-  use({'williamboman/mason.nvim'})
-  use({'williamboman/mason-lspconfig.nvim'})
   
   -- Auto completion
   use({'hrsh7th/nvim-cmp'})
@@ -51,7 +49,6 @@ return require('packer').startup(function(use)
   -- Color highlighting
   use 'norcalli/nvim-colorizer.lua'
   
-  -- Automatically set up your configuration after cloning packer.nvim
   if packer_bootstrap then
     require('packer').sync()
   end

@@ -18,109 +18,24 @@ vim.api.nvim_create_autocmd('LspAttach', {
   end,
 })
 
--- Add cmp_nvim_lsp capabilities
-local cmp_ok, cmp_lsp = pcall(require, 'cmp_nvim_lsp')
-local capabilities = cmp_ok and cmp_lsp.default_capabilities() or vim.lsp.protocol.make_client_capabilities()
+-- Manually load and apply configs from nvim-lspconfig
+local lspconfig_path = vim.api.nvim_get_runtime_file('lsp/', false)[1]
 
--- TypeScript/JavaScript (now includes MDX)
--- TypeScript/JavaScript (now includes MDX AND ASTRO)
-vim.lsp.config('ts_ls', {
-  cmd = { 'typescript-language-server', '--stdio' },
-  filetypes = { "typescript", "typescriptreact", "typescript.tsx", "javascript", "javascriptreact", "javascript.jsx", "mdx", "astro" },
-  root_markers = { 'tsconfig.json', 'jsconfig.json', 'package.json', '.git' },
-  capabilities = capabilities,
-})
-vim.lsp.enable('ts_ls')
+local function load_config(name)
+  local config_file = lspconfig_path .. name .. '.lua'
+  local ok, config = pcall(dofile, config_file)
+  if ok and config then
+    vim.lsp.config(name, config)
+    vim.lsp.enable(name)
+  else
+    vim.notify('Failed to load config for ' .. name, vim.log.levels.ERROR)
+  end
+end
 
--- ESLint (now includes MDX)
-vim.lsp.config('eslint', {
-  cmd = { 'vscode-eslint-language-server', '--stdio' },
-  filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact", "mdx" },
-  root_markers = { '.eslintrc', '.eslintrc.js', '.eslintrc.json', 'package.json', '.git' },
-  capabilities = capabilities,
-  on_attach = function(client, bufnr)
-    vim.api.nvim_create_autocmd("BufWritePre", {
-      buffer = bufnr,
-      callback = function()
-        vim.cmd("EslintFixAll")
-      end,
-    })
-  end,
-})
-vim.lsp.enable('eslint')
-
--- CSS
-vim.lsp.config('cssls', {
-  cmd = { 'vscode-css-language-server', '--stdio' },
-  filetypes = { "css", "scss", "sass", "less" },
-  root_markers = { 'package.json', '.git' },
-  capabilities = capabilities,
-})
-vim.lsp.enable('cssls')
-
--- HTML
-vim.lsp.config('html', {
-  cmd = { 'vscode-html-language-server', '--stdio' },
-  filetypes = { "html" },
-  root_markers = { 'package.json', '.git' },
-  capabilities = capabilities,
-})
-vim.lsp.enable('html')
-
--- Emmet (now includes MDX)
-vim.lsp.config('emmet_ls', {
-  cmd = { 'emmet-ls', '--stdio' },
-  filetypes = { "css", "html", "javascript", "sass", "scss", "astro", "mdx" },
-  root_markers = { 'package.json', '.git' },
-  capabilities = capabilities,
-  init_options = {
-    html = {
-      options = {
-        ["bem.enabled"] = true,
-      }
-    }
-  }
-})
-vim.lsp.enable('emmet_ls')
-
--- Astro
-vim.lsp.config('astro', {
-  cmd = { 'astro-ls', '--stdio' },
-  filetypes = { "astro" },
-  root_markers = { 'astro.config.mjs', 'package.json', '.git' },
-  capabilities = capabilities,
-  init_options = {
-    typescript = {},
-  },
-})
-vim.lsp.enable('astro')
-
--- TailwindCSS (now includes MDX)
-vim.lsp.config('tailwindcss', {
-  cmd = { 'tailwindcss-language-server', '--stdio' },
-  filetypes = { "html", "css", "scss", "javascript", "javascriptreact", "typescript", "typescriptreact", "astro", "mdx" },
-  root_markers = { 'tailwind.config.js', 'tailwind.config.ts', 'package.json', '.git' },
-  capabilities = capabilities,
-})
-vim.lsp.enable('tailwindcss')
-
--- Marksman (Markdown - now includes MDX)
-vim.lsp.config('marksman', {
-  cmd = { 'marksman', 'server' },
-  filetypes = { "markdown", "mdx" },
-  root_markers = { '.git' },
-  capabilities = capabilities,
-})
-vim.lsp.enable('marksman')
-
--- MDX Analyzer Language Server
-vim.lsp.config('mdx_analyzer', {
-  cmd = { "mdx-language-server", "--stdio" },
-  filetypes = { "mdx" },
-  root_markers = { 'package.json', '.git' },
-  capabilities = capabilities,
-  init_options = {
-    typescript = {}
-  },
-})
-vim.lsp.enable('mdx_analyzer')
+-- Load servers (ESLint disabled)
+load_config('ts_ls')
+load_config('cssls')
+load_config('html')
+load_config('tailwindcss')
+load_config('emmet_ls')
+load_config('astro')
