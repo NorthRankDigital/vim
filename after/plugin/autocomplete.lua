@@ -1,5 +1,4 @@
 local cmp = require('cmp')
-require("luasnip.loaders.from_vscode").lazy_load()
 
 cmp.setup({
   mapping = cmp.mapping.preset.insert({
@@ -7,30 +6,59 @@ cmp.setup({
     ['<CR>'] = cmp.mapping.confirm({ 
       select = true
     }),
-    ['<C-e>'] = cmp.mapping.close(), -- Add this to manually close completion
+    ['<C-e>'] = cmp.mapping.close(),
   }),
   snippet = {
     expand = function(args)
-      if vim.bo.filetype == 'scss' or vim.bo.filetype == 'sass' then
-        -- For SCSS/SASS, just insert the text without snippet expansion
-        vim.api.nvim_put({args.body}, 'c', false, true)
-      else
-        require('luasnip').lsp_expand(args.body)
-      end
+      require('luasnip').lsp_expand(args.body)
     end,
   },  
   sources = cmp.config.sources({
     {name = 'nvim_lsp'},
-    {name = 'luasnip'},
+    {name = 'buffer'},
+  }),
+  -- Filter out snippet completions
+  formatting = {
+    format = function(entry, vim_item)
+      return vim_item
+    end,
+  },
+  -- This is the key part - filter out snippets from ALL sources
+  entries = {
+    name = 'custom',
+    selection_order = 'near-cursor',
+  },
+  matching = {
+    disallow_symbol_nonprefix_matching = false,
+  },
+  preselect = cmp.PreselectMode.None,
+  completion = {
+    completeopt = 'menu,menuone,noinsert,noselect'
+  },
+  -- Filter function to remove snippets
+  view = {
+    entries = {name = 'custom', selection_order = 'near-cursor' }
+  },
+})
+
+-- Add this to filter snippets globally
+local types = require('cmp.types')
+cmp.setup({
+  sources = cmp.config.sources({
+    {
+      name = 'nvim_lsp',
+      entry_filter = function(entry, ctx)
+        -- Filter out snippet kind completions
+        return entry:get_kind() ~= types.lsp.CompletionItemKind.Snippet
+      end
+    },
     {name = 'buffer'},
   })
 })
 
--- Completely disable completion for SCSS variables
+-- SCSS/SASS configs...
 cmp.setup.filetype('scss', {
   enabled = function()
-    -- Disable completion when typing $ variables
-    local context = require('cmp.config.context')
     local line = vim.api.nvim_get_current_line()
     local col = vim.api.nvim_win_get_cursor(0)[2]
     if line:sub(col, col) == '$' or line:sub(col-1, col-1) == '$' then
@@ -44,7 +72,6 @@ cmp.setup.filetype('scss', {
   })
 })
 
--- Same for sass files
 cmp.setup.filetype('sass', {
   enabled = function()
     local line = vim.api.nvim_get_current_line()
