@@ -39,3 +39,11 @@ load_config('html')
 load_config('tailwindcss')
 load_config('emmet_ls')
 load_config('astro')
+
+--[[ Servers to install
+-- ts_ls:     npm install -g typescript typescript-language-server
+-- cssls:     npm i -g vscode-langservers-extracted
+-- html:      npm i -g vscode-langservers-extracted
+-- emmet_ls:  npm i -g vscode-langservers-extracted 
+-- astro:     npm install -g @astrojs/language-server
+--]]
