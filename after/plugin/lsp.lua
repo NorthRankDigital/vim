@@ -2,6 +2,12 @@
 vim.api.nvim_create_autocmd('LspAttach', {
   desc = 'LSP actions',
   callback = function(event)
+    local client = vim.lsp.get_client_by_id(event.data.client_id)
+    
+    if client:supports_method('textDocument/documentColor') then
+      vim.lsp.document_color.enable(false, event.buf)
+    end
+    
     local opts = { buffer = event.buf }
     vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
     vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
@@ -18,32 +24,19 @@ vim.api.nvim_create_autocmd('LspAttach', {
   end,
 })
 
--- Manually load and apply configs from nvim-lspconfig
-local lspconfig_path = vim.api.nvim_get_runtime_file('lsp/', false)[1]
-
-local function load_config(name)
-  local config_file = lspconfig_path .. name .. '.lua'
-  local ok, config = pcall(dofile, config_file)
-  if ok and config then
-    vim.lsp.config(name, config)
-    vim.lsp.enable(name)
-  else
-    vim.notify('Failed to load config for ' .. name, vim.log.levels.ERROR)
-  end
-end
-
--- Load servers (ESLint disabled)
-load_config('ts_ls')
-load_config('cssls')
-load_config('html')
-load_config('tailwindcss')
-load_config('emmet_ls')
-load_config('astro')
+-- Simple approach - let configs auto-load
+vim.lsp.enable('ts_ls')
+vim.lsp.enable('cssls')
+vim.lsp.enable('html')
+vim.lsp.enable('emmet_ls')
+vim.lsp.enable('astro')
+vim.lsp.enable('tailwindcss')
 
 --[[ Servers to install
--- ts_ls:     npm install -g typescript typescript-language-server
--- cssls:     npm i -g vscode-langservers-extracted
--- html:      npm i -g vscode-langservers-extracted
--- emmet_ls:  npm i -g vscode-langservers-extracted 
--- astro:     npm install -g @astrojs/language-server
+-- ts_ls:       npm install -g typescript typescript-language-server
+-- cssls:       npm i -g vscode-langservers-extracted
+-- html:        npm i -g vscode-langservers-extracted
+-- emmet_ls:    npm i -g emmet-ls
+-- astro:       npm install -g @astrojs/language-server
+-- tailwindcss: npm install -g @tailwindcss/language-server
 --]]

@@ -46,9 +46,6 @@ return require('packer').startup(function(use)
   use({'saadparwaiz1/cmp_luasnip'})
   use({'rafamadriz/friendly-snippets'})
   
-  -- Color highlighting
-  use 'norcalli/nvim-colorizer.lua'
-  
   if packer_bootstrap then
     require('packer').sync()
   end
